@@ -6,7 +6,7 @@ def do_action(action, unit):
     pass
 
 
-def take_action(client_command: str) -> None:
+def parse_action(client_command: str) -> None:
     action = client_command.split(":")[0]
     unit = int(client_command.split(":")[1])
     valid_action = action in ACTIONS;
@@ -26,7 +26,7 @@ def main():
     while True:
         message, clientAddress = mySock.recvfrom(2048)
         message = message.decode()
-        take_action(message)
+        parse_action(message)
         mySock.sendto("got it".encode(), clientAddress)
 
 if __name__ == "__main__":
