@@ -15,7 +15,7 @@ def init_actions():
 def move_forward(unit: int):
     picar = Picarx()
     picar.forward(unit)
-    sleep(1)
+    sleep(5)
     picar.forward(0)
 
 def do_action(action, unit) -> None:
@@ -44,7 +44,7 @@ def attempt_command(client_command: str) -> None:
         return
 
     action = action_args[0]
-    unit = action_args[1]
+    unit = int(action_args[1])
 
     do_action(action, unit)
     return
