@@ -52,12 +52,13 @@ def move_backward(action: str, action_id):
     speed = 100
     while speed > 0:
         picar.forward(-1 * speed)
+        sleep(SLEEP_TIME)
 
         if has_new_command(action, action_id):
             return
 
-        sleep(SLEEP_TIME)
         speed -= 1
+        print(speed)
 
 
 def make_command(action, action_id):
