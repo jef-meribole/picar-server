@@ -45,10 +45,13 @@ def has_new_command(current_action, action_id) -> bool:
 def move_motor(motor_spin: int, rate: int, action: str, action_id: int) -> None:
     picar = Picarx()
     speed = motor_spin
+    move_speed = speed * rate
+    picar.forward(move_speed)
+    sleep(0.1)
     while speed > 0:
         speed -= 1
-        picar.forward(speed * rate)
-        print(speed * rate)
+        picar.forward(move_speed)
+        print(move_speed)
         sleep(SLEEP_TIME)
 
         if has_new_command(action, action_id) and speed < 50:
