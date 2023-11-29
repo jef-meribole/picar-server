@@ -15,14 +15,10 @@ def init_actions():
 def move_forward(unit: int):
     picar = Picarx()
     picar.forward(unit)
-    sleep(0.1)
-    picar.forward(0)
 
 def move_backward(unit: int):
     picar = Picarx()
     picar.forward(-1*unit)
-    sleep(0.1)
-    picar.forward(0)
 
 def do_action(action, unit) -> None:
     action = action.lower()
