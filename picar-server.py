@@ -95,8 +95,8 @@ def run_server():
 
 
 def run_actions():
-    do_action(CURRENT_COMMAND, CURRENT_ID)
-    pass
+    while True:
+        do_action(CURRENT_COMMAND, CURRENT_ID)
 
 
 def main():
