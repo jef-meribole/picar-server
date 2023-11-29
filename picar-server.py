@@ -7,6 +7,8 @@ SLEEP_TIME = 0.001
 CURRENT_ID = 0
 CURRENT_ACTION = "stop"  # starting defualt commanad
 
+LAST_RECEIVED_COMMAND_ID = 0
+LAST_RUN_COMMMAND_ID = 0
 
 def init_actions():
     actions = {
@@ -62,6 +64,7 @@ def make_command(action, action_id):
 
 
 def do_action(action: str, action_id: int) -> None:
+    global LAST_RUN_COMMMAND_ID
     action = action.lower()
     actions = init_actions()
     valid_action = action in actions.keys()
@@ -72,6 +75,7 @@ def do_action(action: str, action_id: int) -> None:
 
     # Execute action with given unit
     actions[action](action, action_id)
+    LAST_RUN_COMMMAND_ID = action_id
 
 
 def move_car(unit: int) -> None:
@@ -98,8 +102,11 @@ def run_actions():
     while True:
         current_command = CURRENT_ACTION
         current_id = CURRENT_ID
-        print(f"executing action: {make_command(current_command, current_id)}")
-        do_action(current_command, current_id)
+
+        # Don't keep repeating the same action
+        if current_id != LAST_RUN_COMMMAND_ID:
+            print(f"executing action: {make_command(current_command, current_id)}")
+            do_action(current_command, current_id)
 
 
 def main():
