@@ -5,7 +5,7 @@ from time import sleep
 def init_actions():
     actions = {
         "forward": move_forward,
-        "backward": move_car,
+        "backward": move_backward,
         "left": move_car,
         "right": move_car,
     }
@@ -15,7 +15,13 @@ def init_actions():
 def move_forward(unit: int):
     picar = Picarx()
     picar.forward(unit)
-    sleep(5)
+    sleep(0.1)
+    picar.forward(0)
+
+def move_backward(unit: int):
+    picar = Picarx()
+    picar.forward(-1*unit)
+    sleep(0.1)
     picar.forward(0)
 
 def do_action(action, unit) -> None:
