@@ -22,10 +22,10 @@ def has_new_command(current_command) -> bool:
     return current_command == LAST_COMMMAND
 
 
-def move_forward():
+def move_forward(command: str):
     picar = Picarx()
     speed = 100
-    while speed >= 0 and not has_new_command():
+    while speed >= 0 and not has_new_command(command):
         picar.forward(speed)
         sleep(SLEEP_TIME)
         speed -= 1
@@ -36,9 +36,16 @@ def stop_car():
     picar.forward(0)
 
 
-def move_backward():
+def move_backward(command: str):
     picar = Picarx()
-    picar.forward(-1*unit)
+    speed = 100
+    while speed >= 0 and not has_new_command(command):
+        picar.forward(-1 * speed)
+        sleep(SLEEP_TIME)
+        speed -= 1
+
+def make_command(action, action_id):
+    return f"{action}:{action_id}"
 
 
 def do_action(action: str, action_id: int) -> None:
@@ -51,7 +58,7 @@ def do_action(action: str, action_id: int) -> None:
         return
 
     # Execute action with given unit
-    actions[action](action_id)
+    actions[action](make_command(action, action_id))
 
 
 def move_car(unit: int) -> None:
@@ -61,10 +68,11 @@ def move_car(unit: int) -> None:
 def main():
     mySock = socket(AF_INET, SOCK_DGRAM)
     mySock.bind(("", 12000))
+    global CURRENT_ID
 
     while True:
         command, clientAddress = mySock.recvfrom(2048)
-        CURRENT_ID += 1
+        CURRENT_ID + 1
 
         command = f"{command.decode()}:{CURRENT_ID}"
         do_action(command, CURRENT_ID)
