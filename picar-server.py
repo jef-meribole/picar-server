@@ -80,8 +80,8 @@ def main():
     while True:
         command, clientAddress = mySock.recvfrom(2048)
         command = command.decode()
-        CURRENT_ID += 1
         LAST_COMMAND = make_command(command, CURRENT_ID)
+        CURRENT_ID += 1
 
         do_action(command, CURRENT_ID)
         print(make_command(command, CURRENT_ID))
