@@ -57,7 +57,6 @@ def move_motor(motor_spin: int, rate: int, action: str, action_id: int) -> None:
         if has_new_command(action, action_id) and speed < 50:
             return
 
-    picar
     stop_car(action, action_id)
 
 
