@@ -59,7 +59,7 @@ def move_motor(motor_spin: int, rate: int, action: str, action_id: int) -> None:
 
 
 def move_forward(action: str, action_id: int) -> None:
-    move_motor(action=action, action_id=action_id, motor_spin=100, rate=2)
+    move_motor(action=action, action_id=action_id, motor_spin=100, rate=1)
 
 
 def stop_car(action: str, action_id: int) -> None:
