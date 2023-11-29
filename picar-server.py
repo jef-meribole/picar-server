@@ -74,9 +74,8 @@ def main():
         command, clientAddress = mySock.recvfrom(2048)
         CURRENT_ID += 1
 
-        command = f"{command.decode()}:{CURRENT_ID}"
         do_action(command, CURRENT_ID)
-        print(command)
+        print(make_command(command, CURRENT_ID))
 
         mySock.sendto("got it".encode(), clientAddress)
 
