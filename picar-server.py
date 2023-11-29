@@ -10,6 +10,7 @@ CURRENT_ACTION = "stop"  # starting defualt commanad
 LAST_RECEIVED_COMMAND_ID = 0
 LAST_RUN_COMMMAND_ID = 0
 
+
 def init_actions() -> dict:
     """Creates action keys and maps them to functions
 
@@ -45,15 +46,15 @@ def move_motor(motor_spin: int, rate: int, action: str, action_id: int) -> None:
     picar = Picarx()
     speed = motor_spin
     while speed > 0:
+        speed -= 1
         picar.forward(speed * rate)
+        print(speed * rate)
         sleep(SLEEP_TIME)
 
         if has_new_command(action, action_id) and speed < 50:
             return
 
-        speed -= 1
-        print(speed*rate)
-
+    picar
     stop_car(action, action_id)
 
 
