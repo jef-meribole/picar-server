@@ -1,5 +1,6 @@
 from socket import *
-
+from picarx import Picarx
+from time import sleep
 
 def init_actions():
     actions = {
@@ -11,6 +12,11 @@ def init_actions():
 
     return actions
 
+def move_forward(unit: int):
+    picar = Picarx()
+    picar.forward(unit)
+    sleep(1)
+    picar.forward(0)
 
 def do_action(action, unit) -> None:
     action = action.lower()
@@ -32,6 +38,7 @@ def move_car(unit: int) -> None:
 def attempt_command(client_command: str) -> None:
     action_args = client_command.split(":")
 
+    # Check if we have the correct number of arguments
     if len(action_args) != 2:
         print("malformed action")
         return
