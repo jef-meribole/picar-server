@@ -10,17 +10,29 @@ CURRENT_ACTION = "stop"  # starting defualt commanad
 LAST_RECEIVED_COMMAND_ID = 0
 LAST_RUN_COMMMAND_ID = 0
 
+def init_actions() -> dict:
+    """Creates action keys and maps them to functions
 
-def init_actions():
+    Returns:
+        dict: _description_
+    """
     actions = {
         "forward": move_forward,
         "backward": move_backward,
-        "left": move_car,
-        "right": move_car,
+        "left": move_left,
+        "right": move_right,
         "stop": stop_car,
     }
 
     return actions
+
+
+def move_left(current_action, action_id):
+    pass
+
+
+def move_right(current_action, action_id):
+    pass
 
 
 def has_new_command(current_action, action_id) -> bool:
@@ -40,23 +52,25 @@ def move_motor(motor_spin: int, rate: int, action: str, action_id: int) -> None:
             return
 
         speed -= 1
-        print(speed)
+        print(speed*rate)
+
+    stop_car(action, action_id)
 
 
-def move_forward(action: str, action_id: int):
+def move_forward(action: str, action_id: int) -> None:
     move_motor(action=action, action_id=action_id, motor_spin=100, rate=2)
 
 
-def stop_car(action: str, action_id: int):
+def stop_car(action: str, action_id: int) -> None:
     picar = Picarx()
     picar.forward(0)
 
 
-def move_backward(action: str, action_id):
+def move_backward(action: str, action_id) -> None:
     move_motor(action=action, action_id=action_id, motor_spin=100, rate=-1)
 
 
-def make_command(action, action_id):
+def make_command(action, action_id) -> str:
     return f"{action}:{action_id}"
 
 
@@ -92,7 +106,6 @@ def run_server():
         CURRENT_ACTION = command
 
         print(f"Command Received: {make_command(command, CURRENT_ID)}")
-        # mySock.sendto("got it".encode(), clientAddress)
 
 
 def run_actions():
