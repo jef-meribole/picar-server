@@ -1,6 +1,6 @@
 from socket import *
 from picarx import Picarx
-from time import sleep
+from time import sleep, perf_counter
 
 def init_actions():
     actions = {
@@ -60,11 +60,14 @@ def main():
     mySock.bind(("", 12000))
 
     while True:
-        mySock.settimeout(0.1)
+        time_start = time.perf_counter()
         command, clientAddress = mySock.recvfrom(2048)
-        if not mySock:
+        time_stop = time.perf_counter()
+
+        if (time_stop - time_start) < 0.1:
             stop_car()
             print("timeout")
+
         command = command.decode()
         attempt_command(command)
         print(command)
