@@ -60,7 +60,7 @@ def main():
     mySock.bind(("", 12000))
 
     while True:
-        socket.settimeout(1)
+        mySock.settimeout(0.1)
         command, clientAddress = mySock.recvfrom(2048)
         if not mySock:
             stop_car()
