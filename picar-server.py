@@ -88,7 +88,7 @@ def run_server():
         command, _ = mySock.recvfrom(2048)
         command = command.decode()
         CURRENT_ID += 1
-        CURRENT_COMMAND = make_command(command, CURRENT_ID)
+        CURRENT_COMMAND = command
 
         print(f"Command Received: {make_command(command, CURRENT_ID)}")
         # mySock.sendto("got it".encode(), clientAddress)
@@ -96,7 +96,10 @@ def run_server():
 
 def run_actions():
     while True:
-        do_action(CURRENT_COMMAND, CURRENT_ID)
+        current_command = CURRENT_COMMAND
+        current_id = CURRENT_ID
+        print(f"executing action: {make_command(current_command, current_id)}")
+        do_action(current_command, current_id)
 
 
 def main():
