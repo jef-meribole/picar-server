@@ -1,10 +1,11 @@
 from socket import *
 from picarx import Picarx
 from time import sleep, perf_counter
+import threading
 
 SLEEP_TIME = 0.001
 CURRENT_ID = 0
-LAST_COMMAND = f"STOP:{0}"
+CURRENT_COMMAND = "stop" # starting defualt commanad
 
 def init_actions():
     actions = {
@@ -18,17 +19,18 @@ def init_actions():
     return actions
 
 
-def has_new_command(current_command) -> bool:
-    print(current_command, LAST_COMMAND)
-    return current_command == LAST_COMMAND
+def has_new_command(current_action, action_id) -> bool:
+    running_action = make_command(current_action, action_id)
+    last_received_action = make_command(current_action, action_id)
+    return running_action == last_received_action
 
 
-def move_forward(command: str):
+def move_forward(command: str, command_id: int):
     picar = Picarx()
     speed = 100
     while speed >= 0:
 
-        if has_new_command(command):
+        if has_new_command(command, command_id):
             return
 
         picar.forward(speed)
@@ -49,6 +51,7 @@ def move_backward(command: str):
         picar.forward(-1 * speed)
         sleep(SLEEP_TIME)
         speed -= 1
+
 
 def make_command(action, action_id):
     return f"{action}:{action_id}"
@@ -71,23 +74,34 @@ def move_car(unit: int) -> None:
     print(f"ACTION: {unit}")
 
 
-def main():
+def run_server():
     mySock = socket(AF_INET, SOCK_DGRAM)
     mySock.bind(("", 12000))
     global CURRENT_ID
-    global LAST_COMMAND
+    global CURRENT_COMMAND
 
     while True:
         command, clientAddress = mySock.recvfrom(2048)
         command = command.decode()
-        LAST_COMMAND = make_command(command, CURRENT_ID)
         CURRENT_ID += 1
+        CURRENT_COMMAND = make_command(command, CURRENT_ID)
 
-        do_action(command, CURRENT_ID)
-        print(make_command(command, CURRENT_ID))
+        print(f"Command Received: {make_command(command, CURRENT_ID)}")
+        # mySock.sendto("got it".encode(), clientAddress)
+    pass
 
-        mySock.sendto("got it".encode(), clientAddress)
 
+def run_actions():
+    do_action(last)
+    pass
+
+
+def main():
+    server_thread = threading.Thread(target=run_server)
+    action_thread = threading.Thread(target=run_actions)
+
+    server_thread.start()
+    action_thread.start()
 
 if __name__ == "__main__":
     main()
