@@ -3,12 +3,13 @@ from socket import socket, AF_INET, SOCK_DGRAM
 import threading
 from picarx import Picarx  # pylint: disable=import-error
 
-SLEEP_TIME = 0.001
+SLEEP_TIME = 0.01
 CURRENT_ID = 0
 CURRENT_ACTION = "stop"  # starting defualt commanad
 
 LAST_RECEIVED_COMMAND_ID = 0
 LAST_RUN_COMMMAND_ID = 0
+
 
 def init_actions():
     actions = {
@@ -28,18 +29,22 @@ def has_new_command(current_action, action_id) -> bool:
     return running_action != last_received_action
 
 
-def move_forward(action: str, action_id: int):
+def move_motor(motor_spin: int, rate: int, action: str, action_id: int) -> None:
     picar = Picarx()
-    speed = 100
+    speed = motor_spin
     while speed > 0:
-        picar.forward(speed)
+        picar.forward(speed * rate)
         sleep(SLEEP_TIME)
 
-        if has_new_command(action, action_id):
+        if has_new_command(action, action_id) and speed < 50:
             return
 
         speed -= 1
         print(speed)
+
+
+def move_forward(action: str, action_id: int):
+    move_motor(action=action, action_id=action_id, motor_spin=100, rate=2)
 
 
 def stop_car(action: str, action_id: int):
@@ -48,17 +53,7 @@ def stop_car(action: str, action_id: int):
 
 
 def move_backward(action: str, action_id):
-    picar = Picarx()
-    speed = 100
-    while speed > 0:
-        picar.forward(-1 * speed)
-        sleep(SLEEP_TIME)
-
-        if has_new_command(action, action_id):
-            return
-
-        speed -= 1
-        print(speed)
+    move_motor(action=action, action_id=action_id, motor_spin=100, rate=-1)
 
 
 def make_command(action, action_id):
