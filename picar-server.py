@@ -19,16 +19,22 @@ def init_actions():
 
 
 def has_new_command(current_command) -> bool:
+    print(current_command, LAST_COMMMAND)
     return current_command == LAST_COMMMAND
 
 
 def move_forward(command: str):
     picar = Picarx()
     speed = 100
-    while speed >= 0 and not has_new_command(command):
+    while speed >= 0:
+
+        if has_new_command(command):
+            return
+
         picar.forward(speed)
         sleep(SLEEP_TIME)
         speed -= 1
+        print(speed)
 
 
 def stop_car():
@@ -69,12 +75,14 @@ def main():
     mySock = socket(AF_INET, SOCK_DGRAM)
     mySock.bind(("", 12000))
     global CURRENT_ID
+    global LAST_COMMAND
 
     while True:
         command, clientAddress = mySock.recvfrom(2048)
-        CURRENT_ID += 1
-
         command = command.decode()
+        CURRENT_ID += 1
+        LAST_COMMAND = CURRENT_ID
+
         do_action(command, CURRENT_ID)
         print(make_command(command, CURRENT_ID))
 
