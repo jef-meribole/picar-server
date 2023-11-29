@@ -92,7 +92,7 @@ def run_server():
 
 
 def run_actions():
-    do_action(last)
+    do_action(CURRENT_COMMAND, CURRENT_ID)
     pass
 
 
