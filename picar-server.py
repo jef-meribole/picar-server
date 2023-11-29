@@ -31,7 +31,7 @@ def has_new_command(current_action, action_id) -> bool:
 def move_forward(action: str, action_id: int):
     picar = Picarx()
     speed = 100
-    while speed >= 0:
+    while speed > 0:
         picar.forward(speed)
         sleep(SLEEP_TIME)
 
@@ -50,7 +50,7 @@ def stop_car(action: str, action_id: int):
 def move_backward(action: str, action_id):
     picar = Picarx()
     speed = 100
-    while speed >= 0:
+    while speed > 0:
         picar.forward(-1 * speed)
 
         if has_new_command(action, action_id):
