@@ -16,6 +16,9 @@ def move_forward(unit: int):
     picar = Picarx()
     picar.forward(unit)
 
+def stop_car():
+    move_forward(0)
+
 def move_backward(unit: int):
     picar = Picarx()
     picar.forward(-1*unit)
@@ -57,11 +60,16 @@ def main():
     mySock.bind(("", 12000))
 
     while True:
-        message, clientAddress = mySock.recvfrom(2048)
-        message = message.decode()
-        attempt_command(message)
-        mySock.sendto("got it".encode(), clientAddress)
+        socket.settimeout(1)
+        command, clientAddress = mySock.recvfrom(2048)
+        if not mySock:
+            stop_car()
+            print("timeout")
+        command = command.decode()
+        attempt_command(command)
+        print(command)
 
+        mySock.sendto("got it".encode(), clientAddress)
 
 if __name__ == "__main__":
     main()
