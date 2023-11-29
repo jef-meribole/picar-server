@@ -22,15 +22,15 @@ def init_actions():
 
 def has_new_command(current_action, action_id) -> bool:
     running_action = make_command(current_action, action_id)
-    last_received_action = make_command(current_action, action_id)
-    return running_action == last_received_action
+    last_received_action = make_command(CURRENT_COMMAND, CURRENT_ID)
+    return running_action != last_received_action
 
 
 def move_forward(command: str, command_id: int):
     picar = Picarx()
     speed = 100
     while speed >= 0:
-        if has_new_command(command, command_id):
+        if has_new_command(CURRENT_COMMAND, CURRENT_ID):
             return
 
         picar.forward(speed)
