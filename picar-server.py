@@ -71,7 +71,7 @@ def do_action(action: str, action_id: int) -> None:
         return
 
     # Execute action with given unit
-    actions[action](make_command(action, action_id))
+    actions[action](action, action_id)
 
 
 def move_car(unit: int) -> None:
