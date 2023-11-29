@@ -60,13 +60,13 @@ def main():
     mySock.bind(("", 12000))
 
     while True:
-        time_start = time.perf_counter()
+        time_start = perf_counter()
         command, clientAddress = mySock.recvfrom(2048)
-        time_stop = time.perf_counter()
+        time_stop = perf_counter()
 
-        if (time_stop - time_start) < 0.1:
-            stop_car()
-            print("timeout")
+        # if (time_stop - time_start) < 0.1:
+        #     stop_car()
+        #     print("timeout")
 
         command = command.decode()
         attempt_command(command)
