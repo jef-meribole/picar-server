@@ -4,7 +4,7 @@ from time import sleep
 
 def init_actions():
     actions = {
-        "forward": move_car,
+        "forward": move_forward,
         "backward": move_car,
         "left": move_car,
         "right": move_car,
