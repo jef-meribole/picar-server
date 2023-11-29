@@ -4,7 +4,7 @@ from time import sleep, perf_counter
 
 SLEEP_TIME = 0.001
 CURRENT_ID = 0
-LAST_COMMMAND = f"STOP:{0}"
+LAST_COMMAND = f"STOP:{0}"
 
 def init_actions():
     actions = {
@@ -19,8 +19,8 @@ def init_actions():
 
 
 def has_new_command(current_command) -> bool:
-    print(current_command, LAST_COMMMAND)
-    return current_command == LAST_COMMMAND
+    print(current_command, LAST_COMMAND)
+    return current_command == LAST_COMMAND
 
 
 def move_forward(command: str):
