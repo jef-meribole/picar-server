@@ -5,7 +5,7 @@ from picarx import Picarx  # pylint: disable=import-error
 
 SLEEP_TIME = 0.001
 CURRENT_ID = 0
-CURRENT_COMMAND = "stop"  # starting defualt commanad
+CURRENT_ACTION = "stop"  # starting defualt commanad
 
 
 def init_actions():
@@ -22,15 +22,15 @@ def init_actions():
 
 def has_new_command(current_action, action_id) -> bool:
     running_action = make_command(current_action, action_id)
-    last_received_action = make_command(CURRENT_COMMAND, CURRENT_ID)
+    last_received_action = make_command(CURRENT_ACTION, CURRENT_ID)
     return running_action != last_received_action
 
 
-def move_forward(command: str, command_id: int):
+def move_forward(action: str, action_id: int):
     picar = Picarx()
     speed = 100
     while speed >= 0:
-        if has_new_command(CURRENT_COMMAND, CURRENT_ID):
+        if has_new_command(action, action_id):
             return
 
         picar.forward(speed)
@@ -82,13 +82,13 @@ def run_server():
     mySock = socket(AF_INET, SOCK_DGRAM)
     mySock.bind(("", 12000))
     global CURRENT_ID
-    global CURRENT_COMMAND
+    global CURRENT_ACTION
 
     while True:
         command, _ = mySock.recvfrom(2048)
         command = command.decode()
         CURRENT_ID += 1
-        CURRENT_COMMAND = command
+        CURRENT_ACTION = command
 
         print(f"Command Received: {make_command(command, CURRENT_ID)}")
         # mySock.sendto("got it".encode(), clientAddress)
@@ -96,7 +96,7 @@ def run_server():
 
 def run_actions():
     while True:
-        current_command = CURRENT_COMMAND
+        current_command = CURRENT_ACTION
         current_id = CURRENT_ID
         print(f"executing action: {make_command(current_command, current_id)}")
         do_action(current_command, current_id)
