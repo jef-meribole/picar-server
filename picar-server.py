@@ -31,7 +31,7 @@ def init_actions() -> dict:
     return actions
 
 
-def set_turn_angle(target_angle: int):
+def set_turn_angle(action: str, action_id: int, target_angle: int):
     turn_commands = ["left", "right"]
     global SERVO_ANGLE
     if abs(target_angle) > MAX_SERVO_ANGLE:
@@ -45,34 +45,33 @@ def set_turn_angle(target_angle: int):
         picarx.set_dir_servo_angle(angle)
         sleep(SLEEP_TIME)
 
+        if has_new_turn_command(action, action_id):
+            return
+
     # update angle
     SERVO_ANGLE = angle
 
 
 def turn_left(current_action, action_id):
-    set_turn_angle(MAX_SERVO_ANGLE)
+    set_turn_angle(current_action, action_id, MAX_SERVO_ANGLE)
 
 
 def turn_right(current_action, action_id):
-    set_turn_angle(MAX_SERVO_ANGLE)
+    set_turn_angle(current_action, action_id, MAX_SERVO_ANGLE)
 
 
-def has_new_command(current_action, action_id) -> bool:
+def has_new_command(current_action, action_id, command_array: list) -> bool:
     running_action = make_command(current_action, action_id)
     last_received_action = make_command(CURRENT_ACTION, CURRENT_ID)
     return running_action != last_received_action
 
 
 def has_new_move_command(current_action, action_id) -> bool:
-    move_commands = ["forward", "backward", "stop"]
-    last_received_action = CURRENT_ACTION
-    last_received_id = CURRENT_ID
+    return has_new_command(current_action, action_id, ["forward", "backward", "stop"])
 
-    running_command = make_command(current_action, action_id)
-    last_received_command = make_command(last_received_action, last_received_id)
 
-    if last_received_action in move_commands:
-        return running_command != last_received_command
+def has_new_turn_command(current_action, action_id) -> bool:
+    return has_new_command(current_action, action_id, ["left", "right"])
 
 
 def move_motor(motor_spin: int, rate: int, action: str, action_id: int) -> None:
