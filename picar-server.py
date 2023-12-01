@@ -10,6 +10,9 @@ CURRENT_ACTION = "stop"  # starting defualt commanad
 LAST_RECEIVED_COMMAND_ID = 0
 LAST_RUN_COMMMAND_ID = 0
 
+MAX_SERVO_ANGLE=35
+SERVO_ANGLE=0
+
 
 def init_actions() -> dict:
     """Creates action keys and maps them to functions
@@ -20,26 +23,56 @@ def init_actions() -> dict:
     actions = {
         "forward": move_forward,
         "backward": move_backward,
-        "left": move_left,
-        "right": move_right,
+        "left": turn_left,
+        "right": turn_right,
         "stop": stop_car,
     }
 
     return actions
 
 
-def move_left(current_action, action_id):
-    pass
+def set_turn_angle(target_angle: int):
+    turn_commands = ["left", "right"]
+    global SERVO_ANGLE
+    if abs(target_angle) > MAX_SERVO_ANGLE:
+        print("MAX TURN EXCEEDED!")
+        return
+
+    # Turn Car with delay
+    start_angle = SERVO_ANGLE
+    picarx = Picarx()
+    for angle in range(start_angle, target_angle):
+        picarx.set_dir_servo_angle(angle)
+        sleep(SLEEP_TIME)
+
+    # update angle
+    SERVO_ANGLE = angle
 
 
-def move_right(current_action, action_id):
-    pass
+def turn_left(current_action, action_id):
+    set_turn_angle(MAX_SERVO_ANGLE)
+
+
+def turn_right(current_action, action_id):
+    set_turn_angle(MAX_SERVO_ANGLE)
 
 
 def has_new_command(current_action, action_id) -> bool:
     running_action = make_command(current_action, action_id)
     last_received_action = make_command(CURRENT_ACTION, CURRENT_ID)
     return running_action != last_received_action
+
+
+def has_new_move_command(current_action, action_id) -> bool:
+    move_commands = ["forward", "backward", "stop"]
+    last_received_action = CURRENT_ACTION
+    last_received_id = CURRENT_ID
+
+    running_command = make_command(current_action, action_id)
+    last_received_command = make_command(last_received_action, last_received_id)
+
+    if last_received_action in move_commands:
+        return running_command != last_received_command
 
 
 def move_motor(motor_spin: int, rate: int, action: str, action_id: int) -> None:
@@ -54,7 +87,7 @@ def move_motor(motor_spin: int, rate: int, action: str, action_id: int) -> None:
         print(move_speed)
         sleep(SLEEP_TIME)
 
-        if has_new_command(action, action_id) and speed < 50:
+        if has_new_move_command(action, action_id) and speed < 50:
             return
 
     stop_car(action, action_id)
@@ -124,10 +157,10 @@ def run_actions():
 
 def main():
     server_thread = threading.Thread(target=run_server)
-    action_thread = threading.Thread(target=run_actions)
+    movement_thread = threading.Thread(target=run_actions)
 
     server_thread.start()
-    action_thread.start()
+    movement_thread.start()
 
 
 if __name__ == "__main__":
