@@ -43,13 +43,11 @@ def set_turn_angle(action: str, action_id: int, target_angle: int):
     picarx = Picarx()
     for angle in range(start_angle, target_angle):
         picarx.set_dir_servo_angle(angle)
+        SERVO_ANGLE = angle
         sleep(SLEEP_TIME)
 
         if has_new_turn_command(action, action_id):
             return
-
-    # update angle
-    SERVO_ANGLE = target_angle
 
 
 def turn_left(current_action, action_id):
