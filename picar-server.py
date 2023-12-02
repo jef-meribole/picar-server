@@ -41,7 +41,8 @@ def set_turn_angle(action: str, action_id: int, target_angle: int):
     # Turn Car with delay
     start_angle = SERVO_ANGLE
     picarx = Picarx()
-    for angle in range(start_angle, target_angle):
+    step = -1 if start_angle > target_angle else 1
+    for angle in range(start_angle, target_angle, step):
         picarx.set_dir_servo_angle(angle)
         SERVO_ANGLE = angle
         sleep(SLEEP_TIME)
