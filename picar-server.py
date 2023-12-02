@@ -49,7 +49,7 @@ def set_turn_angle(action: str, action_id: int, target_angle: int):
             return
 
     # update angle
-    SERVO_ANGLE = angle
+    SERVO_ANGLE = target_angle
 
 
 def turn_left(current_action, action_id):
