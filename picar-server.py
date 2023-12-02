@@ -38,7 +38,6 @@ def set_turn_angle(action: str, action_id: int, target_angle: int):
         print("MAX TURN EXCEEDED!")
         return
 
-    # Turn Car with delay
     start_angle = SERVO_ANGLE
     picarx = Picarx()
     step = -1 if start_angle > target_angle else 1
@@ -49,6 +48,8 @@ def set_turn_angle(action: str, action_id: int, target_angle: int):
 
         if has_new_turn_command(action, action_id):
             return
+        
+    set_turn_angle(action, action_id, 0)
 
 
 def turn_left(current_action, action_id):
