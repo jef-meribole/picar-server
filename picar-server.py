@@ -53,7 +53,7 @@ def set_turn_angle(action: str, action_id: int, target_angle: int):
 
 
 def turn_left(current_action, action_id):
-    set_turn_angle(current_action, action_id, MAX_SERVO_ANGLE)
+    set_turn_angle(current_action, action_id, -1 * MAX_SERVO_ANGLE)
 
 
 def turn_right(current_action, action_id):
